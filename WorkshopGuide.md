@@ -117,19 +117,25 @@ library(DT)
 Choose **at least one** of these options:
 
 #### Option A: ChatGPT (Recommended for Beginners)
-1. Go to https://chat.openai.com
-2. Create free account or log in
-3. Test with: "Write a simple R Shiny app that displays 'Hello World'"
+1. Go to [https://chat.openai.com](https://chat.openai.com)  
+2. Create free account or log in  
+3. Test with: `Write a simple R Shiny app that displays 'Hello World'`
 
 #### Option B: GitHub Copilot (Best for RStudio Integration)
-1. Sign up at https://github.com/features/copilot
-2. Install in RStudio: Tools → Global Options → Copilot
+1. Sign up at [https://github.com/features/copilot](https://github.com/features/copilot)  
+2. Install in RStudio: `Tools → Global Options → Copilot`  
 3. Requires GitHub account (free for verified students/educators)
 
 #### Option C: Claude (Alternative)
-1. Visit https://claude.ai
-2. Create free account
+1. Visit [https://claude.ai](https://claude.ai)  
+2. Create free account  
 3. Good for explaining code and debugging
+
+#### Option D: Qwen (Lightweight Alternative)
+1. Go to [https://chat.qwen.ai](https://chat.qwen.ai)  
+2. Log in with Alibaba account or create a new one  
+3. Supports multiple languages and handles large code snippets efficiently
+
 
 **Workshop Tip:** Have both ChatGPT (for generating code) and Claude (for explaining concepts) open.
 
