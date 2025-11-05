@@ -116,6 +116,10 @@ library(DT)
 
 Choose **at least one** of these options:
 
+### Step 2: Set Up AI Coding Assistant
+
+Choose **at least one** of these options:
+
 #### Option A: ChatGPT (Recommended for Beginners)
 1. Go to [https://chat.openai.com](https://chat.openai.com)  
 2. Create free account or log in  
@@ -131,8 +135,13 @@ Choose **at least one** of these options:
 2. Log in with Alibaba account or create a new one  
 3. Supports multiple languages and handles large code snippets efficiently
 
+#### Option D: Gemini (For Google Users)
+1. Visit [https://gemini.google.com](https://gemini.google.com)  
+2. Log in with your Google account  
+3. Integrated with Google Workspace (Docs, Sheets, etc.) — useful for cross-app workflows  
 
-**Workshop Tip:** Have both ChatGPT (for generating code) and Qwen/Claude (for explaining concepts) open.
+**Workshop Tip:** Have both ChatGPT/Gemini (for generating code) and Qwen/Claude (for explaining concepts) open.
+
 
 ### Step 3: Download Workshop Materials
 
