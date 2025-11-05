@@ -25,10 +25,10 @@
 ## Workshop Overview
 
 ### The Journey So Far
-Over the past three days with Professor Di Cook, you have mastered:
-- **Day 1-2:** Tidy data principles, data wrangling with dplyr and tidyr
-- **Day 2:** Creating powerful visualizations with ggplot2
-- **Day 3:** Building statistical models and machine learning workflows with tidymodels
+Over the past two days days with Professor Di Cook, you have learned:
+- Tidy data principles, data wrangling with dplyr and tidyr
+- Creating powerful visualizations with ggplot2
+- Building statistical models and machine learning workflows with tidymodels
 
 ### Today's Goal
 Transform your static R analysis into **interactive web applications** that policymakers can explore themselves, using AI-assisted coding to accelerate development.
