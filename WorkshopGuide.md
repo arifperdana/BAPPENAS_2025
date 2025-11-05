@@ -132,7 +132,7 @@ Choose **at least one** of these options:
 3. Supports multiple languages and handles large code snippets efficiently
 
 
-**Workshop Tip:** Have both ChatGPT (for generating code) and Claude (for explaining concepts) open.
+**Workshop Tip:** Have both ChatGPT (for generating code) and Qwen/Claude (for explaining concepts) open.
 
 ### Step 3: Download Workshop Materials
 
