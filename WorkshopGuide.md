@@ -15,17 +15,16 @@
 4. [Technical Setup](#technical-setup)
 5. [Session 3: Introduction to R Shiny](#session-3-introduction-to-r-shiny)
 6. [Session 4: Applied Dashboard Development](#session-4-applied-dashboard-development)
-7. [Datasets Reference](#datasets-reference)
-8. [AI Prompt Library](#ai-prompt-library)
-9. [Troubleshooting Guide](#troubleshooting-guide)
-10. [Resources for Further Learning](#resources-for-further-learning)
+7. [AI Prompt Library](#ai-prompt-library)
+8. [Troubleshooting Guide](#troubleshooting-guide)
+9. [Resources for Further Learning](#resources-for-further-learning)
 
 ---
 
 ## Workshop Overview
 
 ### The Journey So Far
-Over the past two days days with Professor Di Cook, you have learned:
+Over the past two days with Professor Di Cook, you have learned:
 - Tidy data principles, data wrangling with dplyr and tidyr
 - Creating powerful visualizations with ggplot2
 - Building statistical models and machine learning workflows with tidymodels
@@ -50,7 +49,7 @@ By the end of this workshop, you will be able to:
 3. ✓ Integrate tidymodels predictions into Shiny outputs
 4. ✓ Use AI coding assistants effectively (prompt engineering for Shiny)
 5. ✓ Debug and customize AI-generated code
-6. ✓ Deploy and share your applications
+6. ✓ Share your applications with colleagues
 
 ---
 
@@ -116,10 +115,6 @@ library(DT)
 
 Choose **at least one** of these options:
 
-### Step 2: Set Up AI Coding Assistant
-
-Choose **at least one** of these options:
-
 #### Option A: ChatGPT (Recommended for Beginners)
 1. Go to [https://chat.openai.com](https://chat.openai.com)  
 2. Create free account or log in  
@@ -142,7 +137,6 @@ Choose **at least one** of these options:
 
 **Workshop Tip:** Have both ChatGPT/Gemini (for generating code) and Qwen/Claude (for explaining concepts) open.
 
-
 ### Step 3: Download Workshop Materials
 
 **GitHub Repository:** https://github.com/dicook/BAPPENAS_2025
@@ -154,8 +148,6 @@ Download these files to your working directory:
 setwd("~/BAPPENAS_Workshop_Day4")
 
 # Files you should have:
-# - bappenas_regional_clean.csv
-# - bappenas_irio_summary.csv
 # - template_app.R
 # - example_dashboard_simple.R
 # - example_dashboard_advanced.R
@@ -365,28 +357,25 @@ Modify the app to:
 
 ### Part 3: Connecting to Di Cook's Work (45-75 minutes)
 
-#### Setup: Loading BAPPENAS Data
+#### Setup: Loading Your Data
 
-**Step 1: Load Your Data**
+**Step 1: Prepare Your Dataset**
+
+For this workshop, you'll use data from Professor Di Cook's sessions. Ensure you have your cleaned dataset ready:
 
 ```r
 library(tidyverse)
 library(shiny)
 
-# Load the cleaned regional data from previous sessions
-bappenas_data <- read_csv("bappenas_regional_clean.csv")
+# Load your cleaned data from previous sessions
+# Adjust the file path as needed
+my_data <- read_csv("your_cleaned_data.csv")
 
 # Verify data structure
-glimpse(bappenas_data)
+glimpse(my_data)
 ```
 
-**Expected columns:**
-- `province` - Province name (character)
-- `year` - Year (numeric, 2015-2023)
-- `grdp` - Gross Regional Domestic Product (numeric)
-- `employment` - Employment rate (numeric)
-- `sector` - Economic sector (character)
-- `population` - Population (numeric)
+**Note:** Use your own cleaned data from Di Cook's sessions, focusing on variables suitable for interactive exploration (e.g., numeric variables for trends, categorical variables for filtering).
 
 ---
 
@@ -397,21 +386,20 @@ Remember the scatter plots you created with Professor Cook? Let's make them inte
 
 **Step 1: Review Your Static Code (5 minutes)**
 
-Here's a typical ggplot from Day 2:
+Here's a typical ggplot pattern from Day 2:
 
 ```r
-# Static visualization from Di Cook's session
-ggplot(bappenas_data, aes(x = grdp, y = employment)) +
-  geom_point(aes(color = sector), size = 3) +
+# Example static visualization pattern
+ggplot(my_data, aes(x = variable1, y = variable2)) +
+  geom_point(aes(color = category), size = 3) +
   geom_smooth(method = "lm", se = TRUE) +
-  facet_wrap(~province) +
   theme_minimal() +
-  labs(title = "GRDP vs Employment by Province",
-       x = "GRDP (Trillion IDR)",
-       y = "Employment Rate (%)")
+  labs(title = "Relationship Between Variables",
+       x = "Variable 1",
+       y = "Variable 2")
 ```
 
-**Problem:** This shows ALL provinces at once. Hard to focus on one region.
+**Problem:** This shows ALL data at once. Hard to focus on specific subsets.
 
 **Step 2: AI Prompt to Convert to Shiny**
 
@@ -423,10 +411,10 @@ Convert this ggplot code into an R Shiny app:
 [Paste your ggplot code here]
 
 Requirements:
-1. Add a selectInput in the UI that allows users to choose ONE province
-2. Filter the data in the server to show only the selected province
+1. Add a selectInput in the UI that allows users to choose ONE category
+2. Filter the data in the server to show only the selected category
 3. Keep all the ggplot styling (colors, theme, labels)
-4. Add a title showing which province is selected
+4. Add a title showing which category is selected
 5. Display the plot in the main panel
 
 Provide complete code in a single app.R file.
@@ -445,13 +433,13 @@ Error message might say: "object not found" or plot shows nothing
 Fix prompt:
 "The plot isn't showing. The data filtering isn't working. 
 Here's my server code: [paste code]
-How do I correctly filter the data based on input$province?"
+How do I correctly filter the data based on the input?"
 ```
 
-**Issue 2: Province list is wrong**
+**Issue 2: Category list is wrong**
 ```
 Fix prompt:
-"My selectInput should show province names from the data, 
+"My selectInput should show category names from the data, 
 but it's showing [what you see]. How do I populate choices 
 dynamically from the dataframe?"
 ```
@@ -463,21 +451,19 @@ Now ask AI to add features:
 **Enhancement Prompt 1: Add Summary Stats**
 ```
 Add a second output below the plot that shows:
-- Total GRDP for the selected province
-- Average employment rate
-- Number of data points
-
-Display these as formatted text.
+- Total number of observations for the selected category
+- Mean and standard deviation of key variables
+- Display these as formatted text.
 ```
 
 **Enhancement Prompt 2: Add Download Button**
 ```
 Add a downloadButton that allows users to download 
-the filtered data for the selected province as a CSV file.
+the filtered data for the selected category as a CSV file.
 ```
 
 **Step 5: Experiment and Share (5 minutes)**
-- Try selecting different provinces
+- Try selecting different categories
 - Show your app to a neighbor
 - Discuss: How would this be useful in a policy briefing?
 
@@ -490,7 +476,7 @@ the filtered data for the selected province as a CSV file.
 ```
 User Input → Reactive Expression → Output
    ↓              ↓                  ↓
-input$province → filtered_data() → renderPlot()
+input$category → filtered_data() → renderPlot()
 ```
 
 **Example Code Pattern:**
@@ -499,19 +485,19 @@ server <- function(input, output) {
   
   # REACTIVE EXPRESSION: Automatically updates when input changes
   filtered_data <- reactive({
-    bappenas_data %>%
-      filter(province == input$province)
+    my_data %>%
+      filter(category == input$category)
   })
   
   # Use filtered_data() with parentheses - it's a function!
   output$plot <- renderPlot({
-    ggplot(filtered_data(), aes(x = year, y = grdp)) +
+    ggplot(filtered_data(), aes(x = var1, y = var2)) +
       geom_line()
   })
   
   output$table <- renderTable({
     filtered_data() %>%
-      summarise(avg_grdp = mean(grdp))
+      summarise(mean_value = mean(var1))
   })
 }
 ```
@@ -554,12 +540,12 @@ server <- function(input, output) {
 Your dashboard MUST include:
 
 **Data Layer:**
-- [ ] Load BAPPENAS regional economic dataset
-- [ ] Clean and prepare data using tidyverse
+- [ ] Load your cleaned dataset from previous sessions
+- [ ] Prepare data using tidyverse principles
 
 **Interactivity:**
 - [ ] At least ONE user input control
-  - Examples: Province selector, year range slider, sector filter
+  - Examples: Category selector, variable chooser, filter slider
 
 **Visualization Output:**
 - [ ] At least ONE interactive ggplot
@@ -578,7 +564,7 @@ Your dashboard MUST include:
 **Bonus Features (Optional):**
 - [ ] Download button for filtered data
 - [ ] Multiple tabs using `tabsetPanel`
-- [ ] Summary statistics with `valueBox` or `infoBox`
+- [ ] Summary statistics display
 - [ ] Interactive table with DT package
 
 ---
@@ -588,7 +574,7 @@ Your dashboard MUST include:
 **Starter Code: template_app.R**
 
 ```r
-# BAPPENAS Policy Dashboard Template
+# Policy Dashboard Template
 # Day 4 Workshop - Dr. Arif Perdana
 
 library(shiny)
@@ -597,8 +583,8 @@ library(broom)
 library(DT)
 
 # ===== DATA LOADING =====
-# Load your cleaned data
-data <- read_csv("bappenas_regional_clean.csv")
+# Load your cleaned data from previous sessions
+data <- read_csv("your_data.csv")
 
 # Quick data check
 glimpse(data)
@@ -607,7 +593,7 @@ glimpse(data)
 ui <- fluidPage(
   
   # Application title
-  titlePanel("BAPPENAS Regional Economic Dashboard"),
+  titlePanel("Policy Dashboard"),
   
   # Sidebar with input controls
   sidebarLayout(
@@ -616,26 +602,23 @@ ui <- fluidPage(
       
       # TODO: Add your input controls here
       
-      # Example: Province selector
-      selectInput("province", 
-                  "Select Province:",
-                  choices = unique(data$province),
-                  selected = "DKI Jakarta"),
+      # Example: Category selector
+      selectInput("category", 
+                  "Select Category:",
+                  choices = unique(data$category),
+                  selected = unique(data$category)[1]),
       
-      # Example: Year range slider
-      sliderInput("year_range",
-                  "Select Year Range:",
-                  min = min(data$year),
-                  max = max(data$year),
-                  value = c(2015, 2023),
-                  step = 1,
-                  sep = ""),
+      # Example: Variable selector
+      selectInput("variable",
+                  "Select Variable to Visualize:",
+                  choices = c("var1", "var2", "var3"),
+                  selected = "var1"),
       
       # Horizontal line separator
       hr(),
       
       # Help text
-      helpText("Select province and year range to update visualizations and model results.")
+      helpText("Select options to update visualizations and model results.")
       
     ),
     
@@ -648,14 +631,14 @@ ui <- fluidPage(
       tabsetPanel(
         
         tabPanel("Visualization",
-                 h3("GRDP Trends"),
+                 h3("Data Trends"),
                  plotOutput("trendPlot", height = "400px"),
                  hr(),
                  DT::dataTableOutput("dataTable")
         ),
         
         tabPanel("Model Results",
-                 h3("Predictive Model"),
+                 h3("Statistical Model"),
                  verbatimTextOutput("modelSummary"),
                  hr(),
                  plotOutput("modelPlot", height = "400px")
@@ -665,12 +648,12 @@ ui <- fluidPage(
                  h3("About This Dashboard"),
                  p("This dashboard demonstrates integration of:"),
                  tags$ul(
-                   tags$li("Tidy data principles (Di Cook Session 1)"),
-                   tags$li("Data visualization (Di Cook Session 2)"),
-                   tags$li("Statistical modeling (Di Cook Session 3)"),
-                   tags$li("Interactive applications (Arif Perdana Session 3-4)")
+                   tags$li("Tidy data principles"),
+                   tags$li("Data visualization with ggplot2"),
+                   tags$li("Statistical modeling with tidymodels"),
+                   tags$li("Interactive applications with Shiny")
                  ),
-                 p("Data source: BAPPENAS Regional Economic Indicators 2015-2023")
+                 p("Built during BAPPENAS-Monash Masterclass 2025")
         )
       )
       
@@ -685,11 +668,7 @@ server <- function(input, output) {
   # This automatically updates when user changes inputs
   filtered_data <- reactive({
     data %>%
-      filter(
-        province == input$province,
-        year >= input$year_range[1],
-        year <= input$year_range[2]
-      )
+      filter(category == input$category)
   })
   
   # TODO: Add your render functions here
@@ -698,15 +677,14 @@ server <- function(input, output) {
   output$trendPlot <- renderPlot({
     
     # Use filtered_data() with parentheses!
-    ggplot(filtered_data(), aes(x = year, y = grdp)) +
+    ggplot(filtered_data(), aes_string(x = "x_var", y = input$variable)) +
       geom_line(size = 1.5, color = "steelblue") +
       geom_point(size = 3, color = "steelblue") +
-      geom_smooth(method = "lm", se = TRUE, color = "darkred") +
       theme_minimal(base_size = 14) +
       labs(
-        title = paste("GRDP Trends -", input$province),
-        x = "Year",
-        y = "GRDP (Trillion IDR)"
+        title = paste("Trends for", input$category),
+        x = "X Variable",
+        y = input$variable
       )
     
   })
@@ -714,18 +692,16 @@ server <- function(input, output) {
   # OUTPUT 2: Data Table
   output$dataTable <- DT::renderDataTable({
     filtered_data() %>%
-      select(year, grdp, employment, population) %>%
-      mutate(
-        grdp = round(grdp, 2),
-        employment = round(employment, 2)
-      )
+      select(1:5) %>%  # Adjust column selection as needed
+      mutate(across(where(is.numeric), ~round(., 2)))
   }, options = list(pageLength = 5))
   
   # OUTPUT 3: Model Summary
   output$modelSummary <- renderPrint({
     
     # Fit linear model on filtered data
-    model <- lm(grdp ~ year + employment, data = filtered_data())
+    formula_str <- paste(input$variable, "~ x_var")
+    model <- lm(as.formula(formula_str), data = filtered_data())
     
     # Display tidy summary
     summary(model)
@@ -736,21 +712,22 @@ server <- function(input, output) {
   output$modelPlot <- renderPlot({
     
     # Fit model
-    model <- lm(grdp ~ year + employment, data = filtered_data())
+    formula_str <- paste(input$variable, "~ x_var")
+    model <- lm(as.formula(formula_str), data = filtered_data())
     
     # Create predictions
     predictions <- filtered_data() %>%
       mutate(predicted = predict(model))
     
     # Plot actual vs predicted
-    ggplot(predictions, aes(x = grdp, y = predicted)) +
+    ggplot(predictions, aes_string(x = input$variable, y = "predicted")) +
       geom_point(size = 3, alpha = 0.6) +
       geom_abline(slope = 1, intercept = 0, color = "red", linetype = "dashed") +
       theme_minimal(base_size = 14) +
       labs(
-        title = "Model Fit: Actual vs Predicted GRDP",
-        x = "Actual GRDP",
-        y = "Predicted GRDP"
+        title = "Model Fit: Actual vs Predicted",
+        x = "Actual Values",
+        y = "Predicted Values"
       )
     
   })
@@ -788,98 +765,93 @@ shinyApp(ui = ui, server = server)
 **Getting Started:**
 
 1. **Copy the template:** Save `template_app.R` as `my_dashboard.R`
-2. **Choose your focus:** What economic question do you want to explore?
+2. **Choose your focus:** What question do you want to explore with your data?
 3. **Start coding:** Use AI to help you build!
 
 ---
 
 #### AI Prompt Library for Your Dashboard
 
-Use these prompts with your AI assistant (ChatGPT, Copilot, Claude):
+Use these prompts with your AI assistant (ChatGPT, Claude, Qwen, Gemini):
 
 **For Adding Input Controls:**
 
 ```
 Prompt 1: Multiple Selection
 "Add a checkboxGroupInput that allows users to select multiple 
-sectors (Agriculture, Manufacturing, Services, Mining) and filter 
-the data to show only selected sectors."
+categories and filter the data to show only selected items."
 
-Prompt 2: Date Picker
-"Replace the year slider with a dateRangeInput for selecting 
-start and end dates. Format the dates as YYYY-MM-DD."
+Prompt 2: Date/Range Picker
+"Add a sliderInput for selecting a range of values. Format it 
+to work with my numeric variable."
 
 Prompt 3: Conditional Inputs
-"Add a radioButtons input to choose between 'Province View' 
-and 'National View'. Show the province selector only when 
-'Province View' is selected."
+"Add a radioButtons input to choose between 'View A' 
+and 'View B'. Show different selectors based on the choice."
 ```
 
 **For Enhanced Visualizations:**
 
 ```
 Prompt 4: Faceted Plot
-"Modify the trend plot to show facets for each economic sector, 
-comparing trends across sectors for the selected province."
+"Modify the trend plot to show facets for each category, 
+comparing trends side by side."
 
 Prompt 5: Interactive Plotly
 "Convert the ggplot trend chart to plotly for interactive 
 tooltips showing exact values on hover."
 
 Prompt 6: Comparison Plot
-"Create a bar chart comparing the selected province's GRDP 
-to the top 5 provinces in the most recent year."
+"Create a bar chart comparing the top 5 values 
+in the most recent time period."
 ```
 
 **For Modeling Outputs:**
 
 ```
 Prompt 7: Multiple Models
-"Fit three models: (1) linear trend, (2) quadratic trend, 
-(3) with employment as predictor. Display all three R-squared 
-values in a comparison table."
+"Fit two models: (1) linear trend, (2) with an additional predictor. 
+Display both R-squared values in a comparison table."
 
 Prompt 8: Forecast Display
-"Using the linear model, create predictions for the next 3 years 
-beyond the data range. Display these forecasts in a table and 
-add them to the trend plot as a dashed line."
+"Using the linear model, create predictions for future values. 
+Display these forecasts in a table and add them to the trend plot 
+as a dashed line."
 
 Prompt 9: Model Diagnostics
-"Create a 2x2 grid of diagnostic plots: residuals vs fitted, 
-Q-Q plot, scale-location, and residuals vs leverage."
+"Create diagnostic plots: residuals vs fitted and Q-Q plot 
+side by side."
 ```
 
 **For Advanced Features:**
 
 ```
 Prompt 10: Download Functionality
-"Add a downloadButton that exports the filtered data as an Excel 
-file with two sheets: (1) raw data, (2) summary statistics."
+"Add a downloadButton that exports the filtered data as a CSV 
+file with appropriate filename."
 
 Prompt 11: Dynamic Text Summary
-"Add a textOutput that displays: 'The average GRDP growth rate 
-for [province] during [year range] was [X]% per year.' 
-Calculate X from the filtered data."
+"Add a textOutput that displays: 'The average value 
+for [category] is [X].' Calculate X from the filtered data."
 
-Prompt 12: Value Boxes
-"Using the shinydashboard package, add three valueBox outputs 
-at the top showing: (1) Total GRDP, (2) Average Employment, 
-(3) Population, all formatted with appropriate units."
+Prompt 12: Summary Boxes
+"Add three summary statistics at the top showing key metrics 
+from the filtered data, formatted clearly."
 ```
 
 **For Layout Improvements:**
 
 ```
 Prompt 13: Responsive Layout
-"Convert the sidebarLayout to a more modern design using 
-fluidRow and column with cards (using shinydashboard::box)."
+"Improve the layout using fluidRow and column for a more 
+modern design."
 
 Prompt 14: Custom Styling
-"Add custom CSS to change the theme colors to match BAPPENAS 
-branding: primary color #1e3a8a (blue), secondary color #10b981 (green)."
+"Add custom CSS to improve the visual appearance with 
+better colors and spacing."
 
 Prompt 15: Loading Indicators
-"Add loading spinners to all plots and tables using the 
+"Add loading spinners to all plots and tables using 
 shinycssloaders package."
 ```
 
@@ -897,7 +869,7 @@ Prompt 17: Performance Issues
 How can I optimize performance?"
 
 Prompt 18: Reactive Logic
-"My plot isn't updating when I change the province selector. 
+"My plot isn't updating when I change the selector. 
 Here's my reactive code: [paste code]
 What am I doing wrong?"
 ```
@@ -925,7 +897,7 @@ You should have:
 You should be:
 - ✓ Adding labels and titles
 - ✓ Improving visual styling
-- ✓ Testing edge cases (empty data, single year, etc.)
+- ✓ Testing edge cases (empty data, extreme values, etc.)
 - ✓ Adding bonus features if time permits
 
 ---
@@ -987,7 +959,7 @@ Symptom: Long delay when changing inputs
 Common Causes:
 - Re-reading data file in server (should load once at top)
 - Complex calculations not using reactive()
-- Plotting entire large dataset
+- Processing entire large dataset
 
 AI Fix Prompt:
 "My app takes 5+ seconds to update. Here's my server function: [paste]
@@ -1000,41 +972,43 @@ How can I improve performance?"
 
 If you complete the basic requirements early, try these:
 
-**Challenge 1: Spatial Integration (Preview for Day 5)**
+**Challenge 1: Multi-Tab Dashboard**
 ```
 Prompt:
-"Add a third tab with a leaflet map showing all provinces.
-Color provinces by their GRDP value in the selected year.
-When user clicks a province on the map, update the province 
-selector to match."
+"Reorganize my app to have separate tabs for:
+- Data exploration with filters
+- Statistical analysis
+- Model predictions
+Each tab should have relevant outputs."
 ```
 
-**Challenge 2: Time Series Animation**
-```
-Prompt:
-"Using the gganimate package, create an animated scatter plot 
-showing how GRDP vs Employment evolves over years for the 
-selected province. Add a play/pause button."
-```
-
-**Challenge 3: Comparative Analysis**
+**Challenge 2: Comparative Analysis**
 ```
 Prompt:
 "Add a 'Comparison Mode' checkbox. When checked, allow users 
-to select 2-3 provinces and display side-by-side comparison 
+to select multiple categories and display side-by-side comparison 
 plots and statistics."
 ```
 
-**Challenge 4: Report Generation**
+**Challenge 3: Advanced Modeling**
+```
+Prompt:
+"Integrate tidymodels workflow into the Shiny app. Allow users to:
+- Choose predictor variables
+- Select model type (linear, random forest)
+- Display model performance metrics
+- Show variable importance plot"
+```
+
+**Challenge 4: Custom Report Generation**
 ```
 Prompt:
 "Add a 'Generate Report' button that creates a downloadable 
-PDF report using R Markdown, including:
+PDF or HTML report including:
 - Selected parameters
 - All current plots
 - Model summary
-- Data table
-Include BAPPENAS logo in header."
+- Data table"
 ```
 
 ---
@@ -1048,8 +1022,8 @@ Include BAPPENAS logo in header."
 **Structure Your Presentation:**
 
 1. **Introduction (30 seconds):**
-   - "My dashboard explores [economic question]"
-   - "I focused on [specific provinces/sectors/time period]"
+   - "My dashboard explores [question]"
+   - "I focused on [specific aspects]"
 
 2. **Live Demo (2 minutes):**
    - Run your app
@@ -1083,7 +1057,7 @@ Include BAPPENAS logo in header."
 2. **Integration:**
    - How does Shiny connect to Di Cook's tidy data principles?
    - Where did your data wrangling skills help today?
-   - How could you use this in your current BAPPENAS projects?
+   - How could you use this in your current work?
 
 3. **Learning Process:**
    - What was easier/harder than expected?
@@ -1109,107 +1083,12 @@ Include BAPPENAS logo in header."
 **Practical Capabilities:**
 - ✓ Can build functional dashboard in <2 hours
 - ✓ Can customize templates for specific needs
-- ✓ Can deploy and share apps with colleagues
+- ✓ Can share apps with colleagues
 - ✓ Can debug common Shiny issues independently
 
 ---
 
 ### Part 7: Next Steps & Resources (90+ minutes)
-
-#### Deployment Options for Your Dashboard
-
-**Option 1: shinyapps.io (Recommended for Beginners)**
-
-**Pros:**
-- Free tier available (5 apps, 25 active hours/month)
-- Easiest deployment process
-- No server management needed
-
-**Setup Steps:**
-```r
-# Install deployment package
-install.packages("rsconnect")
-
-# Create account at shinyapps.io
-# Copy your token from account settings
-
-# Configure your account
-library(rsconnect)
-rsconnect::setAccountInfo(
-  name="your-username",
-  token="your-token",
-  secret="your-secret"
-)
-
-# Deploy your app
-rsconnect::deployApp("path/to/your/app")
-```
-
-**Full Tutorial:** https://shiny.rstudio.com/articles/shinyapps.html
-
----
-
-**Option 2: RStudio Connect (For BAPPENAS Enterprise)**
-
-**Pros:**
-- On-premises hosting (data security)
-- Authentication and access control
-- Scheduled reports and email delivery
-- Better for internal organizational use
-
-**Requirements:**
-- IT support for server setup
-- License purchase (contact Posit)
-- Integration with BAPPENAS infrastructure
-
-**Contact:** Your IT department or https://posit.co/products/enterprise/connect/
-
----
-
-**Option 3: Shinylive (Experimental)**
-
-**Pros:**
-- No server needed - runs in browser
-- Free hosting via GitHub Pages
-- Good for simple apps with small data
-
-**Cons:**
-- Limited to smaller datasets
-- Still in development
-- Not all R packages supported
-
-**Learn More:** https://github.com/posit-dev/shinylive
-
----
-
-#### Version Control and Collaboration
-
-**Why Use Git/GitHub for Shiny Apps:**
-- Track changes to your code over time
-- Collaborate with colleagues
-- Easy deployment to shinyapps.io
-- Backup and version history
-
-**Quick Start Guide:**
-
-```bash
-# In your app directory
-git init
-git add app.R data/
-git commit -m "Initial dashboard version"
-
-# Create repository on GitHub
-# Follow instructions to push
-
-git remote add origin https://github.com/yourusername/your-repo.git
-git push -u origin main
-```
-
-**Resources:**
-- Happy Git and GitHub for the useR: https://happygitwithr.com/
-- GitHub Desktop (GUI option): https://desktop.github.com/
-
----
 
 #### Continuing Your Learning Journey
 
@@ -1218,7 +1097,8 @@ git push -u origin main
 **1. Mastering Shiny (Free Online Book)**
 - Author: Hadley Wickham (creator of tidyverse)
 - URL: https://mastering-shiny.org/
-- Covers: Advanced reactivity, modules, testing, performance
+- Covers: Advanced reactivity, modules, best practices
+- Recommended chapters for beginners: 1-7
 
 **2. Shiny Gallery**
 - URL: https://shiny.rstudio.com/gallery/
@@ -1233,7 +1113,7 @@ git push -u origin main
 **4. Awesome Shiny Extensions**
 - URL: https://github.com/nanxstats/awesome-shiny-extensions
 - Curated list of packages that extend Shiny
-- Themes, widgets, deployment tools
+- Themes, widgets, tools
 
 ---
 
@@ -1244,55 +1124,10 @@ git push -u origin main
 - Essential for large applications
 - Tutorial: https://shiny.rstudio.com/articles/modules.html
 
-**Shiny Dashboard:**
-- Professional dashboard layouts
-- Value boxes, info boxes, navigation
-- Package: `shinydashboard`
-
-**Performance Optimization:**
-- Caching with `bindCache()`
-- Async programming with `future` package
-- Profiling with `profvis`
-
-**Testing:**
-- `shinytest2` for automated testing
-- Ensures app works after code changes
-
-**Authentication:**
-- `shinymanager` for login screens
-- LDAP integration for enterprise
-- OAuth for external authentication
-
----
-
-#### BAPPENAS-Specific Resources
-
-**Templates and Examples:**
-
-We've prepared templates specifically for BAPPENAS workflows:
-
-1. **Economic Indicator Dashboard**
-   - GRDP, employment, poverty visualization
-   - Provincial and national views
-   - Download: `bappenas_economic_template.R`
-
-2. **IRIO Analysis Dashboard**
-   - Input-output table explorer
-   - Multiplier calculations
-   - Sector linkage visualization
-   - Download: `bappenas_irio_template.R`
-
-3. **Spatial Economic Dashboard**
-   - Integration with Day 5 material (A/Prof. Raschky)
-   - Leaflet maps with economic data
-   - Regional clustering analysis
-   - Download: `bappenas_spatial_template.R`
-
-**Data Sources:**
-
-- `bappenas_regional_clean.csv` - Regional economic indicators 2015-2023
-- `bappenas_irio_summary.csv` - Input-output summary tables
-- `bappenas_spatial.geojson` - Province boundaries (for Day 5)
+**Shiny Themes:**
+- Professional styling options
+- Packages: `bslib`, `shinythemes`
+- Consistent look and feel
 
 ---
 
@@ -1325,15 +1160,20 @@ We've prepared templates specifically for BAPPENAS workflows:
 - Good for: Explaining concepts, providing alternatives
 - Prompt style: Conversational, can iterate in thread
 
-**GitHub Copilot:**
-- Best for: Auto-completing code as you type
-- Good for: Suggesting similar patterns, fixing syntax
-- Works within: RStudio directly (inline suggestions)
-
 **Claude:**
 - Best for: Explaining complex code, debugging
 - Good for: Understanding errors, architectural advice
 - Prompt style: Can handle longer code snippets
+
+**Qwen:**
+- Best for: Lightweight queries, multiple languages
+- Good for: Quick code snippets, explanations
+- Prompt style: Efficient, handles large code blocks
+
+**Gemini:**
+- Best for: Integration with Google Workspace
+- Good for: Cross-platform workflows
+- Prompt style: Google ecosystem integration
 
 ---
 
@@ -1345,7 +1185,7 @@ We've prepared templates specifically for BAPPENAS workflows:
 - If AI generated significant portions of code, note it in comments:
 ```r
 # Core reactive structure generated with ChatGPT assistance
-# Modified by [Your Name] for BAPPENAS-specific requirements
+# Modified by [Your Name] for specific requirements
 ```
 
 **2. Understanding:**
@@ -1362,138 +1202,6 @@ We've prepared templates specifically for BAPPENAS workflows:
 - AI can generate plausible-looking but incorrect code
 - Always validate outputs, especially statistical calculations
 - Cross-reference with official documentation
-
----
-
-## Datasets Reference
-
-### Dataset 1: bappenas_regional_clean.csv
-
-**Description:**
-Cleaned regional economic indicators for Indonesian provinces (2015-2023)
-
-**Columns:**
-
-| Column | Type | Description | Example Values |
-|--------|------|-------------|----------------|
-| `province` | Character | Province name | "DKI Jakarta", "West Java" |
-| `province_code` | Character | Province code | "31", "32" |
-| `year` | Numeric | Year | 2015, 2016, ..., 2023 |
-| `grdp` | Numeric | Gross Regional Domestic Product (Trillion IDR) | 2.56, 2.78, 3.02 |
-| `grdp_growth` | Numeric | Annual GRDP growth rate (%) | 5.2, 5.8, 6.1 |
-| `employment` | Numeric | Employment rate (%) | 94.2, 94.8, 95.1 |
-| `population` | Numeric | Population (millions) | 10.2, 10.4, 10.6 |
-| `sector` | Character | Economic sector | "Agriculture", "Manufacturing", "Services" |
-| `sector_contribution` | Numeric | Sector contribution to GRDP (%) | 15.3, 35.2, 49.5 |
-| `poverty_rate` | Numeric | Poverty rate (%) | 9.8, 9.2, 8.5 |
-
-**Data Source:** BPS (Statistics Indonesia), cleaned and aggregated for workshop use
-
-**Usage Example:**
-```r
-library(tidyverse)
-
-# Load data
-data <- read_csv("bappenas_regional_clean.csv")
-
-# Quick exploration
-glimpse(data)
-summary(data)
-
-# Example analysis
-data %>%
-  filter(year == 2023) %>%
-  arrange(desc(grdp)) %>%
-  head(10)
-```
-
----
-
-### Dataset 2: bappenas_irio_summary.csv
-
-**Description:**
-Simplified Input-Output table summary for Indonesia (2020)
-
-**Columns:**
-
-| Column | Type | Description |
-|--------|------|-------------|
-| `sector_code` | Character | Sector classification code |
-| `sector_name` | Character | Sector name |
-| `output` | Numeric | Total output (Billion IDR) |
-| `intermediate_input` | Numeric | Intermediate consumption |
-| `value_added` | Numeric | Value added |
-| `final_demand` | Numeric | Final demand |
-| `export` | Numeric | Export value |
-| `import` | Numeric | Import value |
-| `output_multiplier` | Numeric | Output multiplier |
-| `employment_multiplier` | Numeric | Employment multiplier |
-| `backward_linkage` | Numeric | Backward linkage index |
-| `forward_linkage` | Numeric | Forward linkage index |
-
-**Usage Example:**
-```r
-# Identify key sectors
-irio <- read_csv("bappenas_irio_summary.csv")
-
-# Find sectors with highest multipliers
-irio %>%
-  arrange(desc(output_multiplier)) %>%
-  select(sector_name, output_multiplier, employment_multiplier) %>%
-  head(10)
-```
-
----
-
-### Dataset 3: mtcars (Built-in R Dataset)
-
-**Description:**
-1974 Motor Trend car data - useful for learning examples
-
-**Columns:**
-- `mpg`: Miles per gallon
-- `cyl`: Number of cylinders
-- `disp`: Displacement (cu.in.)
-- `hp`: Horsepower
-- `wt`: Weight (1000 lbs)
-- `qsec`: 1/4 mile time
-- `vs`: Engine (0 = V-shaped, 1 = straight)
-- `am`: Transmission (0 = automatic, 1 = manual)
-- `gear`: Number of forward gears
-- `carb`: Number of carburetors
-
-**Usage:**
-```r
-# Already loaded in R
-data(mtcars)
-head(mtcars)
-```
-
----
-
-### Dataset 4: gapminder (From gapminder Package)
-
-**Description:**
-Global development statistics (1952-2007)
-
-**Installation:**
-```r
-install.packages("gapminder")
-library(gapminder)
-```
-
-**Columns:**
-- `country`: Country name
-- `continent`: Continent
-- `year`: Year
-- `lifeExp`: Life expectancy
-- `pop`: Population
-- `gdpPercap`: GDP per capita
-
-**Why Useful:**
-- Similar structure to regional economic data
-- Good for learning time series visualization
-- International comparison examples
 
 ---
 
@@ -1522,7 +1230,7 @@ Create a Shiny app that:
 
 **Prompt G3: Simple Visualization**
 ```
-Build a Shiny app using [dataset name] that:
+Build a Shiny app using my dataset that:
 - Has a selectInput for choosing the x-axis variable
 - Has a selectInput for choosing the y-axis variable
 - Displays a scatter plot with ggplot2
@@ -1566,7 +1274,7 @@ Modify my renderPlot to:
 ```
 Convert my ggplot to plotly for interactive tooltips that show:
 - Exact values on hover
-- Province/region name
+- Category/group name
 - Additional information from [column name]
 Make it responsive and add zoom functionality.
 ```
@@ -1578,9 +1286,9 @@ Make it responsive and add zoom functionality.
 **Prompt D1: Reactive Filtering**
 ```
 Create a reactive expression that filters my dataset based on:
-- input$province (province selector)
-- input$year_range (slider with min and max)
-- input$sector (checkbox group)
+- input$category (category selector)
+- input$range (slider with min and max)
+- input$options (checkbox group)
 Return the filtered dataframe.
 ```
 
@@ -1588,7 +1296,7 @@ Return the filtered dataframe.
 ```
 Add a renderTable output that shows:
 - Mean, median, and sd of [variable]
-- For the selected province and year range
+- For the selected filters
 - Formatted with 2 decimal places
 - With clear column headers
 ```
@@ -1618,10 +1326,9 @@ In the server function:
 
 **Prompt M2: Model Comparison**
 ```
-Fit three models:
-- Model 1: Simple linear trend (y ~ year)
-- Model 2: With additional predictor (y ~ year + x)
-- Model 3: With interaction (y ~ year * x)
+Fit two models:
+- Model 1: Simple predictor (y ~ x)
+- Model 2: Multiple predictors (y ~ x1 + x2)
 
 Display a comparison table showing:
 - Model name
@@ -1633,10 +1340,10 @@ Display a comparison table showing:
 **Prompt M3: Predictions**
 ```
 Using the fitted model:
-1. Generate predictions for the next 3 years
+1. Generate predictions for new/future values
 2. Calculate confidence intervals
-3. Create a dataframe with: year, predicted_value, lower_ci, upper_ci
-4. Display in a table and add to the trend plot as a dashed line
+3. Create a dataframe with: value, predicted, lower_ci, upper_ci
+4. Display in a table and add to the plot as a dashed line
 ```
 
 **Prompt M4: Tidymodels Integration**
@@ -1644,10 +1351,9 @@ Using the fitted model:
 Convert this tidymodels workflow to work in Shiny:
 [paste your tidymodels code]
 
-Update the workflow when user changes input$province.
+Update the workflow when user changes inputs.
 Display:
 - Model metrics (RMSE, R-squared)
-- Variable importance plot
 - Residuals plot
 ```
 
@@ -1674,26 +1380,25 @@ Improve my sidebar by:
 - Adding horizontal lines (hr()) as separators
 ```
 
-**Prompt L3: Value Boxes**
+**Prompt L3: Summary Display**
 ```
-Using shinydashboard, add a row of 4 valueBox widgets showing:
-- Total GRDP (with icon "chart-line")
-- Average growth rate (with icon "arrow-up")
-- Number of observations (with icon "database")
-- Latest year available (with icon "calendar")
+Add a row at the top showing key metrics:
+- Total observations
+- Average value
+- Date range
+- Other relevant statistics
 
 Make them dynamically update based on filtered data.
-Use color="blue" for positive metrics, color="yellow" for neutral.
+Use clear formatting with appropriate icons or styling.
 ```
 
 **Prompt L4: Custom CSS**
 ```
 Add custom CSS styling to my app to:
-- Change the background color of the sidebar to #f0f0f0
-- Make all headers (h3) blue (#1e3a8a)
-- Add a subtle shadow to all plots
+- Change the background color of the sidebar
+- Make all headers blue
+- Add spacing between elements
 - Increase font size for readability
-- Add the BAPPENAS logo in the top left
 ```
 
 ---
@@ -1703,31 +1408,21 @@ Add custom CSS styling to my app to:
 **Prompt A1: Download Handler**
 ```
 Add a downloadButton that exports:
-1. The filtered data as an Excel file
-2. With two sheets: "Data" and "Summary"
-3. "Data" sheet: All filtered rows
-4. "Summary" sheet: Basic statistics
+1. The filtered data as a CSV file
+2. Include column headers
+3. Format numbers appropriately
 Include the current date in the filename.
 ```
 
 **Prompt A2: Dynamic UI**
 ```
-Make the sector selector appear only when:
-- User checks a box labeled "Filter by sector"
+Make the secondary selector appear only when:
+- User checks a box labeled "Show advanced options"
 Use conditionalPanel or renderUI
 Update the reactive filter accordingly.
 ```
 
-**Prompt A3: Bookmarking**
-```
-Add bookmark functionality so users can:
-- Save the current state (all input values)
-- Get a URL they can share
-- Return to the exact same view later
-Use shiny::enableBookmarking
-```
-
-**Prompt A4: File Upload**
+**Prompt A3: File Upload**
 ```
 Add a fileInput that allows users to:
 - Upload their own CSV file
@@ -1834,16 +1529,16 @@ data <- read_csv("data/data.csv")
 
 **Step 1: Check Input ID Matching**
 ```r
-# In UI - input ID is "year_slider"
-sliderInput("year_slider", ...)
+# In UI - input ID is "my_slider"
+sliderInput("my_slider", ...)
 
 # In Server - must use same ID
 output$plot <- renderPlot({
   # Correct:
-  filtered <- data %>% filter(year == input$year_slider)
+  filtered <- data %>% filter(value == input$my_slider)
   
   # Wrong (typo):
-  filtered <- data %>% filter(year == input$yearslider)
+  filtered <- data %>% filter(value == input$myslider)
 })
 ```
 
@@ -1851,7 +1546,7 @@ output$plot <- renderPlot({
 ```r
 # Wrong - reading input outside reactive context:
 server <- function(input, output) {
-  selected_year <- input$year  # This won't work!
+  selected_value <- input$slider  # This won't work!
   
   output$plot <- renderPlot({
     ...
@@ -1861,7 +1556,7 @@ server <- function(input, output) {
 # Correct - read input inside render function:
 server <- function(input, output) {
   output$plot <- renderPlot({
-    selected_year <- input$year  # Now it's reactive!
+    selected_value <- input$slider  # Now it's reactive!
     ...
   })
 }
@@ -1914,7 +1609,7 @@ output$plot <- renderPlot({
 
 **3. Check for ggplot errors:**
 ```r
-# Common error: wrong aesthetics
+# Common error: wrong column names
 ggplot(data, aes(x = wrong_column_name, y = ...))  # Column doesn't exist!
 
 # Fix: Verify column names
@@ -2022,12 +1717,12 @@ server <- function(input, output) {
 # Bad - filters data multiple times
 server <- function(input, output) {
   output$plot <- renderPlot({
-    filtered <- data %>% filter(province == input$prov)
+    filtered <- data %>% filter(category == input$cat)
     ggplot(filtered, ...)
   })
   
   output$table <- renderTable({
-    filtered <- data %>% filter(province == input$prov)  # Duplicate work!
+    filtered <- data %>% filter(category == input$cat)  # Duplicate work!
     summary(filtered)
   })
 }
@@ -2035,7 +1730,7 @@ server <- function(input, output) {
 # Good - filter once, use many times
 server <- function(input, output) {
   filtered <- reactive({
-    data %>% filter(province == input$prov)
+    data %>% filter(category == input$cat)
   })
   
   output$plot <- renderPlot({
@@ -2054,9 +1749,9 @@ server <- function(input, output) {
 output$plot <- renderPlot({
   data %>%
     filter(
-      province == input$prov,
-      year == input$year,
-      sector == input$sector
+      cat1 == input$cat1,
+      cat2 == input$cat2,
+      cat3 == input$cat3
     ) %>%
     ggplot(...)
 })
@@ -2067,9 +1762,9 @@ output$plot <- renderPlot({
   
   data %>%
     filter(
-      province == isolate(input$prov),    # Don't react to these
-      year == isolate(input$year),
-      sector == isolate(input$sector)
+      cat1 == isolate(input$cat1),    # Don't react to these
+      cat2 == isolate(input$cat2),
+      cat3 == isolate(input$cat3)
     ) %>%
     ggplot(...)
 })
@@ -2077,227 +1772,57 @@ output$plot <- renderPlot({
 
 ---
 
-### Issue 6: Deployment Problems
-
-**Symptom:** App works locally but fails on shinyapps.io
-
-**Common Causes:**
-
-**1. Missing packages:**
-```r
-# Solution: Add library() calls at top of app.R
-library(shiny)
-library(tidyverse)
-library(DT)
-# ... all packages you use
-```
-
-**2. Wrong file paths:**
-```r
-# Wrong - absolute path (only works on your computer)
-data <- read_csv("C:/Users/YourName/Documents/data.csv")
-
-# Right - relative path
-data <- read_csv("data/data.csv")  # Assuming data/ folder uploaded too
-```
-
-**3. Large data files:**
-```
-Solution: shinyapps.io has file size limits
-- Free tier: 1 GB total
-- Compress data or use database connection instead
-- Consider sampling for demo purposes
-```
-
-**4. Check deployment logs:**
-```r
-# View logs after deployment fails
-rsconnect::showLogs()
-```
-
----
-
 ## Resources for Further Learning
 
-### Online Courses
-
-**1. Datacamp: Building Web Applications with Shiny**
-- Duration: 4 hours
-- Level: Beginner to Intermediate
-- Cost: Requires Datacamp subscription
-- Link: https://www.datacamp.com/courses/building-web-applications-with-shiny-in-r
-
-**2. RStudio Education: Shiny Workshops**
-- Duration: Various (2-4 hours each)
-- Level: All levels
-- Cost: Free
-- Link: https://education.rstudio.com/
-
-**3. Coursera: Developing Data Products**
-- Duration: 4 weeks
-- Level: Intermediate
-- Cost: Free to audit, certificate optional
-- Link: https://www.coursera.org/learn/data-products
-
----
-
-### Books (Free Online)
+### Shiny-Specific Learning
 
 **1. Mastering Shiny by Hadley Wickham**
-- Best for: Comprehensive learning
-- Topics: Reactivity, modules, testing, deployment
+- Best for: Comprehensive learning from basics to advanced
+- Topics: Reactivity, modules, best practices
 - Link: https://mastering-shiny.org/
-- Recommended chapters for beginners: 1-7
+- **Recommended chapters for beginners:** Chapters 1-7
 
-**2. Outstanding User Interfaces with Shiny**
-- Best for: Improving app design
-- Topics: UX, advanced layouts, JavaScript integration
-- Link: https://unleash-shiny.rinterface.com/
-- Recommended: Chapters on shinydashboard
+**2. Shiny Gallery**
+- Best for: Inspiration and examples
+- Browse 100+ apps with source code
+- Link: https://shiny.rstudio.com/gallery/
+- Filter by use case and complexity
 
-**3. Engineering Production-Grade Shiny Apps**
-- Best for: Professional development
-- Topics: Project structure, testing, optimization
-- Link: https://engineering-shiny.org/
-- Recommended: When scaling beyond prototypes
+**3. RStudio Community Forum**
+- Best for: Getting help and sharing
+- Very active, friendly community
+- Link: https://community.rstudio.com/c/shiny
+- Search before posting
 
----
-
-### Video Tutorials
-
-**1. Shiny Tutorial Playlist by RStudio**
-- Platform: YouTube
-- Duration: ~3 hours total
-- Link: Search "RStudio Shiny tutorial" on YouTube
-- Great for visual learners
-
-**2. Statistical Analysis with R - Shiny Series**
-- Platform: YouTube / Coursera
-- Focus: Integrating statistics with Shiny
-- Good complement to this workshop
-
----
-
-### Package Documentation
-
-**Essential Packages to Explore:**
-
-**shinydashboard:**
-- Professional dashboard layouts
-- Docs: https://rstudio.github.io/shinydashboard/
-- Example: https://rstudio.github.io/shinydashboard/examples.html
-
-**DT (DataTables):**
-- Interactive, searchable tables
-- Docs: https://rstudio.github.io/DT/
-- Features: Sorting, filtering, pagination
-
-**plotly:**
-- Interactive plots from ggplot
-- Docs: https://plotly.com/r/
-- Use: `ggplotly(your_ggplot)`
-
-**shinyWidgets:**
-- Enhanced input controls
-- Docs: https://dreamrs.github.io/shinyWidgets/
-- Includes: Better selectors, switches, date pickers
-
-**leaflet:**
-- Interactive maps (preview for Day 5)
-- Docs: https://rstudio.github.io/leaflet/
-- Integration: Add maps to your dashboards
+**4. Shiny Cheat Sheet**
+- Quick reference for functions
+- Link: https://shiny.rstudio.com/images/shiny-cheatsheet.pdf
+- Print and keep handy
 
 ---
 
 ### Community and Support
 
-**1. RStudio Community Forum**
-- URL: https://community.rstudio.com/c/shiny
-- Very active, friendly community
-- Post questions, share apps
-- Search before posting - many questions already answered
+**Where to Get Help:**
 
-**2. Stack Overflow**
-- Tag: [r] [shiny]
-- Good for specific technical questions
-- Search first: https://stackoverflow.com/questions/tagged/shiny
+1. **RStudio Community (Recommended)**
+   - URL: https://community.rstudio.com/c/shiny
+   - Post questions with reproducible examples
+   - Very responsive community
 
-**3. Shiny Contest**
-- Annual competition showcasing best Shiny apps
-- Gallery: https://www.rstudio.com/blog/winners-of-the-3rd-annual-shiny-contest/
-- Great inspiration for features and design
+2. **Stack Overflow**
+   - Tag: [r] [shiny]
+   - Search first: https://stackoverflow.com/questions/tagged/shiny
+   - Good for specific technical questions
 
-**4. R-Bloggers**
-- URL: https://www.r-bloggers.com/
-- Search: "Shiny" for tutorials and examples
-- Weekly Shiny tips and tricks
+3. **GitHub Issues**
+   - For package-specific problems
+   - Check package GitHub repository
 
----
-
-### BAPPENAS-Specific Resources
-
-**Internal Resources:**
-
-**1. BAPPENAS Data Portal**
-- Access to official datasets
-- API documentation for live data
-- Contact: [Your data team contact]
-
-**2. IT Support for Deployment**
-- RStudio Connect setup
-- Server access
-- Authentication integration
-- Contact: [Your IT contact]
-
-**3. Colleague Network**
-- Workshop alumni mailing list
-- Monthly meetup for R users
-- Code review partnerships
-
----
-
-### Recommended Learning Path
-
-**Week 1-2: Foundations**
-- Complete Mastering Shiny chapters 1-3
-- Build 3 simple apps using different datasets
-- Practice with the mtcars dataset
-
-**Week 3-4: Integration**
-- Recreate one of your existing analyses as a Shiny app
-- Add reactive filtering and multiple outputs
-- Get feedback from colleagues
-
-**Week 5-6: Enhancement**
-- Add shinydashboard layout
-- Integrate plotly for interactivity
-- Deploy to shinyapps.io
-
-**Week 7-8: Production**
-- Build app for actual BAPPENAS project
-- Add authentication if needed
-- Deploy to RStudio Connect
-- Train colleagues on usage
-
----
-
-### Staying Current
-
-**Follow These Accounts for Updates:**
-
-**Twitter/X:**
-- @rstudio (official news)
-- @hadleywickham (tidyverse creator)
-- @dataandme (R community curator)
-- Hashtag: #rstats #shiny
-
-**LinkedIn:**
-- Posit (formerly RStudio)
-- R programming groups
-
-**Newsletters:**
-- R Weekly: https://rweekly.org/
-- Includes Shiny news and tutorials
+4. **R-Bloggers**
+   - URL: https://www.r-bloggers.com/
+   - Search "Shiny" for tutorials
+   - Weekly tips and examples
 
 ---
 
@@ -2327,142 +1852,7 @@ rsconnect::showLogs()
 
 ---
 
-### Keyboard Shortcuts
-
-**RStudio:**
-- `Ctrl+Shift+Enter` (Win) / `Cmd+Shift+Enter` (Mac): Run current chunk
-- `Ctrl+Enter` / `Cmd+Enter`: Run current line
-- `Ctrl+Shift+K` / `Cmd+Shift+K`: Knit document
-- `Ctrl+1` / `Cmd+1`: Focus on source pane
-- `Ctrl+2` / `Cmd+2`: Focus on console
-
-**When Running App:**
-- `Ctrl+C` in console: Stop app
-- `Esc`: Stop app (alternative)
-- Browser refresh: Reload app
-
----
-
-### File Structure Best Practices
-
-**Recommended App Organization:**
-
-```
-my_dashboard/
-├── app.R                 # Main app file
-├── data/
-│   ├── raw/             # Original data files
-│   │   └── source.csv
-│   └── clean/           # Cleaned data
-│       └── data_clean.csv
-├── R/
-│   ├── data_processing.R    # Data cleaning functions
-│   ├── plotting_functions.R # Custom plot functions
-│   └── modeling.R           # Model functions
-├── www/
-│   ├── styles.css       # Custom CSS
-│   ├── logo.png         # Images
-│   └── script.js        # Custom JavaScript (if needed)
-├── README.md            # Project documentation
-└── .gitignore          # Git ignore file
-
-```
-
-**For Deployment:**
-- Only include necessary files
-- Compress large data files
-- Remove intermediate/temporary files
-
----
-
-### Complete Example: Minimal App
-
-```r
-# minimal_app.R
-# A complete, working Shiny app in minimal form
-
-library(shiny)
-library(ggplot2)
-
-# UI: What users see
-ui <- fluidPage(
-  titlePanel("Minimal Shiny App"),
-  sidebarLayout(
-    sidebarPanel(
-      sliderInput("n", "Sample size:", 10, 100, 50)
-    ),
-    mainPanel(
-      plotOutput("histogram")
-    )
-  )
-)
-
-# Server: The R logic
-server <- function(input, output) {
-  output$histogram <- renderPlot({
-    data <- rnorm(input$n)
-    hist(data, main = paste("Histogram of", input$n, "random values"),
-         xlab = "Value", col = "steelblue")
-  })
-}
-
-# Run the app
-shinyApp(ui, server)
-```
-
-**To run:** Save and click "Run App" in RStudio
-
----
-
-### Acknowledgments
-
-**Workshop Materials:**
-- Based on materials by Professor Dianne Cook (Monash University)
-- Integration with BAPPENAS datasets and use cases
-- AI-assisted coding methodology development
-
-**Data Sources:**
-- BPS (Statistics Indonesia)
-- BAPPENAS planning documents
-- Synthetic data for workshop examples
-
-**Special Thanks:**
-- Monash University BAPPENAS Masterclass team
-- Workshop participants for feedback
-- BAPPENAS staff for data access and context
-
----
-
-### Contact Information
-
-**Workshop Facilitator:**
-Dr. Arif Perdana  
-[Contact details]
-
-**For Technical Support:**
-[BAPPENAS IT contact]
-
-**For Further Learning:**
-RStudio Community: https://community.rstudio.com/
-
----
-
-### License and Usage
-
-**Workshop Materials:**
-These materials are provided for educational purposes for BAPPENAS Masterclass participants.
-
-**Code Examples:**
-All code examples in this guide are released under MIT License - free to use, modify, and distribute with attribution.
-
-**Data:**
-Workshop datasets are for educational use only. Contact BAPPENAS for permissions regarding actual data use in production applications.
-
----
-
-## Quick Reference Cards
-
-### Essential Function Reference
+### Quick Reference: Essential Functions
 
 **UI Functions:**
 ```r
@@ -2513,7 +1903,7 @@ validate(need(condition, message))
 
 ---
 
-### Common Patterns Cheat Sheet
+### Common Patterns
 
 **Pattern 1: Basic Input → Output**
 ```r
@@ -2552,13 +1942,50 @@ ui <- fluidPage(
 server <- function(input, output) {
   data_to_plot <- eventReactive(input$go, {
     # Only runs when button clicked
-    expensive_computation()
+    process_data()
   })
   
   output$plot <- renderPlot({
     plot(data_to_plot())
   })
 }
+```
+
+---
+
+### Minimal Working Example
+
+```r
+# minimal_app.R
+# Complete working Shiny app
+
+library(shiny)
+library(ggplot2)
+
+# UI: What users see
+ui <- fluidPage(
+  titlePanel("Minimal Shiny App"),
+  sidebarLayout(
+    sidebarPanel(
+      sliderInput("n", "Sample size:", 10, 100, 50)
+    ),
+    mainPanel(
+      plotOutput("histogram")
+    )
+  )
+)
+
+# Server: The R logic
+server <- function(input, output) {
+  output$histogram <- renderPlot({
+    data <- rnorm(input$n)
+    hist(data, main = paste("Histogram of", input$n, "random values"),
+         xlab = "Value", col = "steelblue")
+  })
+}
+
+# Run the app
+shinyApp(ui, server)
 ```
 
 ---
@@ -2571,7 +1998,7 @@ server <- function(input, output) {
 - Start simple, iterate
 - Use AI as a tool, not a crutch
 - Test thoroughly
-- Share your work with the community
+- Share your work
 
 **Next Steps:**
 1. Review this guide when stuck
@@ -2584,5 +2011,5 @@ server <- function(input, output) {
 ---
 
 *Last Updated: November 2025*  
-*Version: 1.0*  
+*Version: 2.0*  
 *BAPPENAS-Monash Masterclass 2025*
