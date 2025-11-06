@@ -347,27 +347,6 @@ merged = regional.merge(province_spatial,
 geo_provinces = province_spatial.merge(provinces_geo, 
                                        on='province_code')
 ```
-
----
-
-## Citation
-
-If using this dataset, please cite:
-
-```
-Bappenas (Ministry of National Development Planning), Indonesia
-Regional Economic and Spatial Dataset, 2015-2023
-Accessed: [Date]
-```
-
----
-
-## Contact & Support
-
-For questions about data methodology, definitions, or access:
-- **Organization:** Bappenas (Badan Perencanaan Pembangunan Nasional)
-- **Website:** https://www.bappenas.go.id
-
 ---
 
 ## Version History
